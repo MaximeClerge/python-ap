@@ -1,9 +1,9 @@
 import pygame
 
-white = (255, 255, 255) 
-black = (0, 0, 0)
-sreensize=(400, 300)
-clockf=0
+white = (255, 255, 255) #Couleur Blanche RGB
+black = (0, 0, 0) #Couleur Noir RGB
+sreensize=(400, 300) #taille ecran 
+clockf=0 #Vitesse du jeux/vitesse de l'horloge
 
 left=20
 top=0
@@ -30,8 +30,8 @@ while True:
 
     while top<300:
         while left<400:
-            rect = pygame.Rect(left, top, 20, 20)
-            pygame.draw.rect(screen, black, rect)
+            rect = pygame.Rect(left, top, 20, 20)  #Creation du pavage 
+            pygame.draw.rect(screen, black, rect)   
             pygame.display.update()
             left+=40
         if left == 400:

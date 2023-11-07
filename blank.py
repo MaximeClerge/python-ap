@@ -5,6 +5,7 @@ black = (0, 0, 0)
 sreensize=(400, 300)
 clockf=0
 k=20
+l=0
 pygame.init()
 
 screen = pygame.display.set_mode(sreensize)
@@ -25,9 +26,15 @@ while True:
 
     screen.fill(white)
 
-    while k<380:
-        k = k + 40
-        rect = pygame.Rect(int(k), 0, 20, 20)
-    pygame.draw.rect(screen, black, rect)
-
-    pygame.display.update()
+    while l<300:
+        while k<400:
+            rect = pygame.Rect(k, l, 20, 20)
+            pygame.draw.rect(screen, black, rect)
+            pygame.display.update()
+            k+=40
+            print(k)
+        if k == 400:
+            k=20
+        else :
+            k=0
+        l+=20

@@ -37,7 +37,11 @@ while True:
                 rect = pygame.Rect(left, top, tile, tile)  #Creation du pavage 
                 pygame.draw.rect(screen, black, rect)   
 
-    snakdrw = pygame.Rect(, top, tile, tile)
-    pygame.draw.rect(screen, black, rect)
-
+    snakdrw = pygame.Rect(snake[0][0]*tile, snake[0][1]*tile, tile, tile)
+    pygame.draw.rect(screen, green, snakdrw)
+    snakdrw = pygame.Rect(snake[1][0]*tile, snake[1][1]*tile, tile, tile)
+    pygame.draw.rect(screen, green, snakdrw)
+    snakdrw = pygame.Rect(snake[2][0]*tile, snake[2][1]*tile, tile, tile)
+    pygame.draw.rect(screen, green, snakdrw)
+    
     pygame.display.update()

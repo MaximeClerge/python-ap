@@ -8,18 +8,8 @@ LEN=300
 HEIGHT=400
 clockf=0 #Vitesse du jeux/vitesse de l'horloge
 tile=20
-left=20
-top=0
 
 snake=[(5,10),(6,10),(7,10)]
-
-Pos=[]  #Creation d'une liste avec la position de tout les carreau du plateau
-ligne=[]
-for i in range(0,400,20):
-    for j in range(0,300,20):
-        ligne.append(j)
-    Pos.append(ligne)
-    ligne=[]
 
 pygame.init()
 
@@ -47,5 +37,7 @@ while True:
                 rect = pygame.Rect(left, top, tile, tile)  #Creation du pavage 
                 pygame.draw.rect(screen, black, rect)   
 
-    
+    snakdrw = pygame.Rect(, top, tile, tile)
+    pygame.draw.rect(screen, black, rect)
+
     pygame.display.update()

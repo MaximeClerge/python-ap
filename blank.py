@@ -6,16 +6,18 @@ black = (0, 0, 0) #Couleur Noir RGB
 green = (0, 255, 0) #Couleut Verte RGB
 LEN=300
 HEIGHT=400
-clockf=0 #Vitesse du jeux/vitesse de l'horloge
+clockf=10 #Vitesse du jeux/vitesse de l'horloge
 tile=20
 
 snake=[(5,10),(6,10),(7,10)]
 
 pygame.init()
-
 screen = pygame.display.set_mode((HEIGHT,LEN))
-
 clock = pygame.time.Clock()
+
+def forwardleft():
+    snake.insert(0,(snake[0][0]-1,snake[0][1])) #Ajoute de la tete du serpent pour faire le deplacement
+    snake.pop(len(snake)-1) #Puis enlever le fin du serpent
 
 while True:
 
@@ -44,4 +46,5 @@ while True:
     snakdrw = pygame.Rect(snake[2][0]*tile, snake[2][1]*tile, tile, tile)
     pygame.draw.rect(screen, green, snakdrw)
     
+    forwardleft()
     pygame.display.update()

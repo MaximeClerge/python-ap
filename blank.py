@@ -4,11 +4,14 @@ from time import sleep
 white = (255, 255, 255) #Couleur Blanche RGB
 black = (0, 0, 0) #Couleur Noir RGB
 green = (0, 255, 0) #Couleut Verte RGB
-sreensize=(400, 300) #taille ecran 
+LEN=300
+HEIGHT=400
 clockf=0 #Vitesse du jeux/vitesse de l'horloge
-
+tile=20
 left=20
 top=0
+
+snake=[(5,10),(6,10),(7,10)]
 
 Pos=[]  #Creation d'une liste avec la position de tout les carreau du plateau
 ligne=[]
@@ -20,7 +23,7 @@ for i in range(0,400,20):
 
 pygame.init()
 
-screen = pygame.display.set_mode(sreensize)
+screen = pygame.display.set_mode((HEIGHT,LEN))
 
 clock = pygame.time.Clock()
 
@@ -38,18 +41,11 @@ while True:
 
     screen.fill(white)
     
-    while top<300:
-        while left<400:
-            rect = pygame.Rect(left, top, 20, 20)  #Creation du pavage 
-            pygame.draw.rect(screen, black, rect)   
-            left+=40
-        if left == 400:
-            left=20
-        else :
-            left=0
-        top+=20
+    for top in range(0,LEN,tile):
+        for left in range (0,HEIGHT,tile):
+            if (top + left )//20%2==0 :
+                rect = pygame.Rect(left, top, tile, tile)  #Creation du pavage 
+                pygame.draw.rect(screen, black, rect)   
 
-        for l in range(0,3): #Creation du serpent
-            snake=pygame.Rect(Pos[5+l][5+l], Pos[10][10], 20, 20)
-            pygame.draw.rect(screen, green, snake)
-            pygame.display.update()
+    
+    pygame.display.update()

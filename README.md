@@ -1,3 +1,3 @@
 # python-ap
-Maxime Clergé repo python
-- Projet Snake 
+- Projet Snake
+  *https://pktraining.gitlab.io/python/python-class/snake/

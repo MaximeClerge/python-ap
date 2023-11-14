@@ -12,6 +12,7 @@ parser.add_argument('--tile-size', default=20 ,type=int,help="argument the size 
 parser.add_argument('--fruit-color', default=(255, 0, 0),help="argument the size of a square tile.")
 parser.add_argument('--snake-length', default=3 ,type=int,help="argument the size of a square tile.")
 parser.add_argument('--snake-color', default=(0, 255, 0) ,help="argument the size of a square tile.")
+parser.add_argument('--gameover-on-exit',help='A flag.', action='store_true')
 
 args = parser.parse_args()
 print(args)
@@ -41,7 +42,7 @@ game = {
 
 def spwan_new_fruit(): #fonction créant les coordonnée d'un fruit sur le plateau placée aléatoirement 
     global fruit #Mise en place d'une variable global 
-    fruit = [rd.randint(0,args.height/args.tile_size-1),rd.randint(0,args.height/args.tile_size-1)]
+    fruit = [rd.randint(0,args.width/args.tile_size-1),rd.randint(0,args.height/args.tile_size-1)]
     return 
 
 spwan_new_fruit()
@@ -77,7 +78,7 @@ if game['mode'] == "MODE_START": #Debut du jeux
         screen.fill(args.bg_color_1)
         
         for top in range(0,args.height,args.tile_size):
-            for left in range (0,args.height,args.tile_size):
+            for left in range (0,args.width,args.tile_size):
                 if (top + left )//args.tile_size%2==0 :
                     rect = pygame.Rect(left, top, args.tile_size, args.tile_size)  #Creation du pavage 
                     pygame.draw.rect(screen, args.bg_color_2, rect)  
@@ -87,6 +88,20 @@ if game['mode'] == "MODE_START": #Debut du jeux
 
         snakehead = snake[-1]
         newsnakehead = [snakehead[0]+snake_dir[0],snakehead[1]+snake_dir[1]] 
+        
+        if args.gameover_on_exit==True:
+            if newsnakehead[0]<0 or newsnakehead[1]<0 or newsnakehead[0]*args.tile_size>args.width or newsnakehead[1]*args.tile_size>args.height :
+                quit(0)
+        else :
+            if newsnakehead[0]*args.tile_size>args.width:
+                newsnakehead = [newsnakehead[0]-args.width/args.tile_size-1,newsnakehead[1]]
+            if newsnakehead[0]<0:
+                newsnakehead = [newsnakehead[0]+args.width/args.tile_size,newsnakehead[1]]
+            if newsnakehead[1]*args.tile_size>args.height :
+                newsnakehead = [newsnakehead[0],newsnakehead[1]-args.height/args.tile_size-1]
+            if newsnakehead[1]<0:
+                newsnakehead = [newsnakehead[0],newsnakehead[1]+args.height/args.tile_size]
+        
 
         if newsnakehead == fruit:   #Prise en compte du contact avec les fruit on garde tout l'ancien Snake puis on rajoute juste la tête
             snake = snake + [newsnakehead]
@@ -94,11 +109,13 @@ if game['mode'] == "MODE_START": #Debut du jeux
             game['score'] += 1 # fruit= +1 au score 
         else :
             snake = snake[1:] + [newsnakehead]
+
+        text = font.render(str(game['score']),1,COULEURSCOREBOARD) #Score board 
+        screen.blit(text,PLACEMENTSCOREBOARD)   #Mise en place du texte sur l'ecran
+
         for i in range(len(snake)):
             snakdrw = pygame.Rect(snake[i][0]*args.tile_size, snake[i][1]*args.tile_size, args.tile_size, args.tile_size)
             pygame.draw.rect(screen, args.snake_color, snakdrw)
 
-        text = font.render(str(game['score']),1,COULEURSCOREBOARD) #Score board 
-        screen.blit(text,PLACEMENTSCOREBOARD)   #Mise en place du texte sur l'ecran
 
         pygame.display.update()

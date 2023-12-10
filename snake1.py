@@ -103,6 +103,10 @@ if True==True :
         pygame.draw.rect(screen, args.fruit_color, fruitpxl) #Dessin du fruit ROUGE 
 
         snakehead = snake[-1]
+        if snakehead in snake[:-1]: #Regarde si la tête est appartient au coprs et si oui fini le jeux 
+            logger.info("Game over - Snake collided with itself.")
+            quit(0)
+        
         newsnakehead = [snakehead[0]+snake_dir[0],snakehead[1]+snake_dir[1]] 
             
         if args.gameover_on_exit==True:

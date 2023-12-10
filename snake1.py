@@ -1,4 +1,6 @@
 import pygame
+import logging
+import sys
 import random as rd
 import argparse
 
@@ -13,9 +15,19 @@ parser.add_argument('--fruit-color', default=(255, 0, 0),help="argument the size
 parser.add_argument('--snake-length', default=3 ,type=int,help="argument the size of a square tile.")
 parser.add_argument('--snake-color', default=(0, 255, 0) ,help="argument the size of a square tile.")
 parser.add_argument('--gameover-on-exit',help='A flag.', action='store_true')
+parser.add_argument('-g', '--debug',default=False , help='Set debug mode.',action='store_true')
 
 args = parser.parse_args()
 print(args)
+
+
+logger = logging.getLogger(__name__)
+handler = logging.StreamHandler(sys.stderr)
+logger.addHandler(handler)
+logger.setLevel(logging.INFO)
+if args.debug:
+    logger.setLevel(logging.DEBUG)
+
 
 #CONSTANTE
 COULEURSCOREBOARD = (255,0,0)#Couleur du score board
@@ -40,21 +52,23 @@ game = {
 } # Mise en place d'un systeme de point 
 # De plus possible amélioration furtur avec un systeme de restart  avec dictionnaire 'game'
 
-def spwan_new_fruit(): #fonction créant les coordonnée d'un fruit sur le plateau placée aléatoirement 
-    global fruit #Mise en place d'une variable global 
-    fruit = [rd.randint(0,args.width/args.tile_size-1),rd.randint(0,args.height/args.tile_size-1)]
-    return 
-
-spwan_new_fruit()
-
 pygame.init()
 screen = pygame.display.set_mode((args.width,args.height))
 clock = pygame.time.Clock()
 
 font = pygame.font.SysFont("Latex", TAILLEFONT) #Font du scoreboard
 
+logger.debug("Start main loop.")
 
-if game['mode'] == "MODE_START": #Debut du jeux
+def spwan_new_fruit(): #fonction créant les coordonnée d'un fruit sur le plateau placée aléatoirement 
+    global fruit
+    fruit = [rd.randint(0,args.width/args.tile_size-1),rd.randint(0,args.height/args.tile_size-1)]
+    return 
+
+spwan_new_fruit()
+
+
+if True==True :        
     while True:
 
         clock.tick(args.fps)
@@ -62,6 +76,7 @@ if game['mode'] == "MODE_START": #Debut du jeux
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_q:
+                    logger.info("Game over.")
                     quit(0)
                 if event.key == pygame.K_UP:
                     snake_dir = HAUT
@@ -72,25 +87,27 @@ if game['mode'] == "MODE_START": #Debut du jeux
                 if event.key == pygame.K_DOWN:
                     snake_dir = BAS
             if event.type == pygame.WINDOWCLOSE :
+                logger.info("Game over.")
                 quit(0)
             pass
 
         screen.fill(args.bg_color_1)
-        
+            
         for top in range(0,args.height,args.tile_size):
             for left in range (0,args.width,args.tile_size):
                 if (top + left )//args.tile_size%2==0 :
                     rect = pygame.Rect(left, top, args.tile_size, args.tile_size)  #Creation du pavage 
                     pygame.draw.rect(screen, args.bg_color_2, rect)  
-
+                        
         fruitpxl = pygame.Rect(fruit[0]*args.tile_size, fruit[1]*args.tile_size, args.tile_size, args.tile_size) 
         pygame.draw.rect(screen, args.fruit_color, fruitpxl) #Dessin du fruit ROUGE 
 
         snakehead = snake[-1]
         newsnakehead = [snakehead[0]+snake_dir[0],snakehead[1]+snake_dir[1]] 
-        
+            
         if args.gameover_on_exit==True:
             if newsnakehead[0]<0 or newsnakehead[1]<0 or newsnakehead[0]*args.tile_size>args.width or newsnakehead[1]*args.tile_size>args.height :
+                logger.info("Game over.")
                 quit(0)
         else :
             if newsnakehead[0]*args.tile_size>args.width:
@@ -101,11 +118,12 @@ if game['mode'] == "MODE_START": #Debut du jeux
                 newsnakehead = [newsnakehead[0],newsnakehead[1]-args.height/args.tile_size-1]
             if newsnakehead[1]<0:
                 newsnakehead = [newsnakehead[0],newsnakehead[1]+args.height/args.tile_size]
-        
+            
 
         if newsnakehead == fruit:   #Prise en compte du contact avec les fruit on garde tout l'ancien Snake puis on rajoute juste la tête
             snake = snake + [newsnakehead]
             spwan_new_fruit() #ajoute d'un nouveau fruit sur le plateau 
+            logger.debug("Snake has eaten a fruit.")
             game['score'] += 1 # fruit= +1 au score 
         else :
             snake = snake[1:] + [newsnakehead]

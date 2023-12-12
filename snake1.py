@@ -33,7 +33,8 @@ if args.debug:
 COULEURSCOREBOARD = (255,0,0)#Couleur du score board
 TAILLEFONT=72 #taille du scoreboard
 PLACEMENTSCOREBOARD=(0,0) #Placement du scoreboard
-
+FRUIT_1 = [3, 3]
+FRUIT_2 = [10,10]
 HAUT = (0,-1) #Création des vecteur direction
 BAS = (0,1)
 DROITE = (1,0)
@@ -60,12 +61,7 @@ font = pygame.font.SysFont("Latex", TAILLEFONT) #Font du scoreboard
 
 logger.debug("Start main loop.")
 
-def spwan_new_fruit(): #fonction créant les coordonnée d'un fruit sur le plateau placée aléatoirement 
-    global fruit
-    fruit = [rd.randint(0,args.width/args.tile_size-1),rd.randint(0,args.height/args.tile_size-1)]
-    return 
-
-spwan_new_fruit()
+fruit = FRUIT_1
 
 
 if True==True :        
@@ -99,8 +95,6 @@ if True==True :
                     rect = pygame.Rect(left, top, args.tile_size, args.tile_size)  #Creation du pavage 
                     pygame.draw.rect(screen, args.bg_color_2, rect)  
                         
-        fruitpxl = pygame.Rect(fruit[0]*args.tile_size, fruit[1]*args.tile_size, args.tile_size, args.tile_size) 
-        pygame.draw.rect(screen, args.fruit_color, fruitpxl) #Dessin du fruit ROUGE 
 
         snakehead = snake[-1]
         if snakehead in snake[:-1]: #Regarde si la tête est appartient au coprs et si oui fini le jeux 
@@ -126,14 +120,21 @@ if True==True :
 
         if newsnakehead == fruit:   #Prise en compte du contact avec les fruit on garde tout l'ancien Snake puis on rajoute juste la tête
             snake = snake + [newsnakehead]
-            spwan_new_fruit() #ajoute d'un nouveau fruit sur le plateau 
+            if fruit == FRUIT_1 :
+                fruit = FRUIT_2 
+            else :
+                fruit = FRUIT_1
             logger.debug("Snake has eaten a fruit.")
+            print(fruit)
             game['score'] += 1 # fruit= +1 au score 
         else :
             snake = snake[1:] + [newsnakehead]
 
         text = font.render(str(game['score']),1,COULEURSCOREBOARD) #Score board 
         screen.blit(text,PLACEMENTSCOREBOARD)   #Mise en place du texte sur l'ecran
+
+        fruitpxl = pygame.Rect(fruit[0]*args.tile_size, fruit[1]*args.tile_size, args.tile_size, args.tile_size) 
+        pygame.draw.rect(screen, args.fruit_color, fruitpxl) #Dessin du fruit ROUGE 
 
         for i in range(len(snake)):
             snakdrw = pygame.Rect(snake[i][0]*args.tile_size, snake[i][1]*args.tile_size, args.tile_size, args.tile_size)

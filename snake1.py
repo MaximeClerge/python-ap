@@ -3,6 +3,7 @@ import logging
 import sys
 import random as rd
 import argparse
+import os 
 
 parser = argparse.ArgumentParser(description='Commande permettant de regler les different parametre du jeux')
 parser.add_argument('--bg-color-1',default=(255,255,255) ,help="argument for the first color of the background checkerboard.")
@@ -16,10 +17,9 @@ parser.add_argument('--snake-length', default=3 ,type=int,help="argument the siz
 parser.add_argument('--snake-color', default=(0, 255, 0) ,help="argument the size of a square tile.")
 parser.add_argument('--gameover-on-exit',help='A flag.', action='store_true')
 parser.add_argument('-g', '--debug',default=False , help='Set debug mode.',action='store_true')
-
+parser.add_argument('--high-scores-file',default=os.path.join(os.environ['HOME'],'.snake_scores.txt'),help='The path to the file in which to store high scores.')
+parser.add_argument('--max-high-scores',type=int,default=5,help='max number of highscores')
 args = parser.parse_args()
-print(args)
-
 
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler(sys.stderr)
@@ -27,6 +27,20 @@ logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 if args.debug:
     logger.setLevel(logging.DEBUG)
+
+def shorten_highscores(scores,max_scores):
+    if 
+
+def update_highscores(scores,new_scores,max_scores):
+
+    if new_scores>0 and (len(scores)<max_scores or new_scores > scores[0][0]):
+        name = input("write your name: ")
+        scores.append((new_scores, name))
+        shorten_highscores(scores, max_scores)
+
+
+
+
 
 
 #CONSTANTE
@@ -63,7 +77,6 @@ logger.debug("Start main loop.")
 
 fruit = FRUIT_1
 
-
 if True==True :        
     while True:
 
@@ -97,6 +110,7 @@ if True==True :
                         
 
         snakehead = snake[-1]
+
         if snakehead in snake[:-1]: #Regarde si la tête est appartient au coprs et si oui fini le jeux 
             logger.info("Game over - Snake collided with itself.")
             quit(0)
@@ -125,7 +139,6 @@ if True==True :
             else :
                 fruit = FRUIT_1
             logger.debug("Snake has eaten a fruit.")
-            print(fruit)
             game['score'] += 1 # fruit= +1 au score 
         else :
             snake = snake[1:] + [newsnakehead]
